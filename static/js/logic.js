@@ -1,32 +1,28 @@
-// create the URL for the geojson
-var url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
-
 // create a map object
-var myMap = L.map("mapid", {
-    center: [37, -95.71],
+let myMap = L.map("mapid", {
+    center: [37.09, -95.71],
     zoom: 5
   });
-  
-  // Adding the base map 
-  L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-    maxZoom: 18,
-    id: "light-v10",
-    accessToken: API_KEY
-  }).addTo(myMap);
 
-  // retrieve the data using  D3
-d3.json(url).then(function(data){
-    console.log(data)
+// Adding the base map 
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(myMap);
+
+// create the URL for the geojson
+let geoData = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+
+// retrieve the data using  D3
+d3.json(geoData).then(function(data){
     
-    for (var i = 0; i < data.features.length; i++){
+    for (let i = 0; i < data.features.length; i++){
 
         // retrive the coordinates for markers
         coords = [data.features[i].geometry.coordinates[1], data.features[i].geometry.coordinates[0]]
         
         //retrieve the color used for each marker
-        var color = '';
-        var depth = data.features[i].geometry.coordinates[2];
+        let color = '';
+        let depth = data.features[i].geometry.coordinates[2];
         switch(true){
             case (depth > -10 && depth < 10):
                 color = 'rgb(19, 235, 45)'
@@ -48,13 +44,12 @@ d3.json(url).then(function(data){
                 break;
         }
 
-        // create the variables for your popup
-        var date = moment(data.features[i].properties.time).format('MMMM Do YYYY')
-        var time =  moment(data.features[i].properties.time).format('h:mm:ss a')
-        var loc = data.features[i].properties.place
-        var mag = data.features[i].properties.mag
+        // create the variables for popup
+        let date = moment(data.features[i].properties.time).format('MMMM Do YYYY')
+        let time =  moment(data.features[i].properties.time).format('h:mm:ss a')
+        let loc = data.features[i].properties.place
+        let mag = data.features[i].properties.mag
 
-        // Create the circles for each earthquake report and add to the baseMap layer.
         L.circle(coords, {
             opacity: .5,
             fillOpacity: 0.75,
@@ -62,18 +57,19 @@ d3.json(url).then(function(data){
             color: 'black',
             fillColor: color,
             radius: 7000 * data.features[i].properties.mag
+            
     }).bindPopup(`<p align = "left"> <strong>Date:</strong> ${date} <br> <strong>Time:</strong>${time} <br>
      <strong>Location:</strong> ${loc} <br> <strong>Magnitude:</strong> ${mag} </p>`).addTo(myMap)
 
     newMarker = L.layer
 }});
 
-var legend = L.control({position: 'bottomright'});
+let legend = L.control({position: 'bottomright'});
 
 legend.onAdd = function (){
-    var div = L.DomUtil.create('div', 'info legend');
-    var grades = ['-10-10', '10-30', '30-50', '50-70', '70-90', '90+'];
-    var colors = [
+    let div = L.DomUtil.create('div', 'info legend');
+    let grades = ['-10-10', '10-30', '30-50', '50-70', '70-90', '90+'];
+    let colors = [
         'rgb(19, 235, 45)',
         'rgb(138, 206, 0)',
         'rgb(186, 174, 0)',
@@ -81,8 +77,8 @@ legend.onAdd = function (){
         'rgb(237, 91, 0)',
         'rgb(242, 24, 31)'
         ];
-    var labels = [];
-    // loop through our density intervals and generate a label with a colored square for each interval
+    let labels = [];
+
     grades.forEach(function(grade, index){
         labels.push("<div class = 'row'><li style=\"background-color: " + colors[index] +  "; width: 20px"+ "; height: 15px" + "\"></li>" + "<li>" + grade + "</li></div>");
     })

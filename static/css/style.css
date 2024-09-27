@@ -14,12 +14,12 @@ html {
 }
 
 .legend {
-  padding: 6px 8px;
+  padding: 10px;
   font: 12px Arial, Helvetica, sans-serif;
   font-weight: bold;
+  line-height: 18px;
   color: #555;
-  background: #fff;
-  background: rgba(255, 255, 255, 0.8);
+  background-color: white;
   border-radius: 5px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
@@ -37,6 +37,11 @@ html {
   height: 70px;
   text-align: center;
 }
+
 .row{
   height:15px;
+}
+
+h1 {
+  text-align: center;
 }
